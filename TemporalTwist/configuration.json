@@ -1,0 +1,29 @@
+﻿{
+  "Formats": [
+    {
+      "Extension": "mp3",
+      "CustomExtension": "mp3",
+      "BitRate": 64000,
+      "SampleRate": 44100,
+      "Name": "PodCast",
+      "TagTypes": [
+        2,
+        4
+      ]
+    },
+    {
+      "Extension": "m4a",
+      "CustomExtension": "m4b",
+      "BitRate": 64000,
+      "SampleRate": 44100,
+      "Name": "IPod PodCast",
+      "TagTypes": [
+        16
+      ]
+    }
+  ],
+  "CheckForUpdatesAtStart": true,
+  "OutputFolder": "C:\\",
+  "SelectedFormat": "PodCast",
+  "Tempo": 1.5
+}
