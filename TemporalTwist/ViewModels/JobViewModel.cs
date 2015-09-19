@@ -7,7 +7,7 @@
 
     using Core;
 
-    using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.CommandWpf;
 
 
     using Model;

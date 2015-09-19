@@ -6,7 +6,7 @@ namespace TemporalTwist.ViewModels
     using System.Windows.Input;
 
     using GalaSoft.MvvmLight;
-    using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.CommandWpf;
 
     using Microsoft.Win32;
 
@@ -101,7 +101,7 @@ namespace TemporalTwist.ViewModels
                 }
 
                 this.job = value;
-                this.RaisePropertyChanged(nameof(this.Job));
+                this.RaisePropertyChanged();
             }
         }
 
