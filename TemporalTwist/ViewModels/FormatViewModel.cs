@@ -31,7 +31,7 @@ namespace TemporalTwist.ViewModels
     using TagLib;
 
     using TemporalTwist.Core;
-    using TemporalTwist.Model;
+    using Model;
 
     public class FormatViewModel : BaseViewModel
     {

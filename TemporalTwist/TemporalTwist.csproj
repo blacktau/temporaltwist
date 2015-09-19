@@ -70,6 +70,18 @@
     <Reference Include="GalaSoft.MvvmLight.Extras">
       <HintPath>..\packages\MvvmLight.3.0.3\lib\net35\GalaSoft.MvvmLight.Extras.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NAudio.Vorbis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Vorbis.1.0.0.0\lib\net35\NAudio.Vorbis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NAudio.WindowsMediaFormat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Wma.1.0\lib\net20\NAudio.WindowsMediaFormat.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -80,6 +92,10 @@
     </Reference>
     <Reference Include="Ninject.Extensions.Factory, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.Extensions.Factory.3.2.1.0\lib\net45-full\Ninject.Extensions.Factory.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NVorbis, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NVorbis.0.8.4.0\lib\NVorbis.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="policy.2.0.taglib-sharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=db62eba44689b5b0, processorArchitecture=MSIL">
@@ -192,13 +208,31 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Interfaces\IJobProcessor.cs" />
+    <Compile Include="Interfaces\IJobProcessorFactory.cs" />
+    <Compile Include="Interfaces\IStepStateMapper.cs" />
+    <Compile Include="Interfaces\IConsoleOutputBus.cs" />
+    <Compile Include="Interfaces\Steps\ICleanupStep.cs" />
+    <Compile Include="Interfaces\Steps\IFileCopyStep.cs" />
+    <Compile Include="Interfaces\Steps\IInitialisationStep.cs" />
+    <Compile Include="Interfaces\Steps\IFfmpegEncodingStep.cs" />
+    <Compile Include="Interfaces\Steps\IFfmpegDecodingStep.cs" />
+    <Compile Include="Interfaces\Steps\ITagCopyingStep.cs" />
+    <Compile Include="Interfaces\Steps\IStep.cs" />
+    <Compile Include="Engine\Steps\NaudioDecodingStep.cs" />
+    <Compile Include="Engine\WaveThingyFactory.cs" />
+    <Compile Include="Factories\FileReaderFactory.cs" />
     <Compile Include="Factories\JobFactory.cs" />
+    <Compile Include="Factories\StepStateMapper.cs" />
     <Compile Include="Interfaces\IConfigurationViewModelFactory.cs" />
+    <Compile Include="Interfaces\IStepFactory.cs" />
     <Compile Include="Interfaces\IJobViewModelFactory.cs" />
+    <Compile Include="Interfaces\Steps\ITempoAdjustmentStep.cs" />
     <Compile Include="Messaging\Notifications.cs" />
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
+    <Compile Include="Services\ConsoleOutputBus.cs" />
     <Compile Include="Services\ShutdownService.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
@@ -212,7 +246,7 @@
     <Compile Include="Configuration\TagTypeListConfigurationValidator.cs" />
     <Compile Include="Core\ThreadSafeObservableCollection.cs" />
     <Compile Include="Model\FormatList.cs" />
-    <Compile Include="Model\IJob.cs" />
+    <Compile Include="Interfaces\IJob.cs" />
     <Compile Include="Model\SupportedFileTypes.cs" />
     <Compile Include="ViewHelpers\AvailableBitRatesList.cs" />
     <Compile Include="ViewHelpers\AvailableSampleRatesList.cs" />
@@ -222,8 +256,8 @@
     <Compile Include="ViewHelpers\BringIntoViewWhenSelectedListBoxItemBehaviour.cs" />
     <Compile Include="Engine\JobProcessor.cs" />
     <Compile Include="Engine\Steps\CleanupStep.cs" />
-    <Compile Include="Engine\Steps\DecodingStep.cs" />
-    <Compile Include="Engine\Steps\EncodingStep.cs" />
+    <Compile Include="Engine\Steps\FfmpegDecodingStep.cs" />
+    <Compile Include="Engine\Steps\FfmpegEncodingStep.cs" />
     <Compile Include="Engine\Steps\InitialisationStep.cs" />
     <Compile Include="Engine\Steps\Step.cs" />
     <Compile Include="Engine\Steps\ExternalExecutionStep.cs" />
@@ -231,8 +265,8 @@
     <Compile Include="Engine\Steps\TagCopyingStep.cs" />
     <Compile Include="Engine\Steps\TempoAdjustmentStep.cs" />
     <Compile Include="Model\Format.cs" />
-    <Compile Include="Model\IFormat.cs" />
-    <Compile Include="Model\IJobItem.cs" />
+    <Compile Include="Interfaces\IFormat.cs" />
+    <Compile Include="Interfaces\IJobItem.cs" />
     <Compile Include="Model\Job.cs" />
     <Compile Include="Model\JobItem.cs" />
     <Compile Include="Model\JobItemState.cs" />
@@ -322,6 +356,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Engine\Converter\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

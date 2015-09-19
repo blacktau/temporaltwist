@@ -1,181 +1,107 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JobItem.cs" company="None">
-//   Copyright (c) 2009, Sean Garrett
-//   All rights reserved.
-//
-//   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the 
-//   following conditions are met:
-//
-//    * Redistributions of source code must retain the above copyright notice, this list of conditions and 
-//      the following disclaimer.
-//    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and 
-//      the following disclaimer in the documentation and/or other materials provided with the distribution.
-//    * The names of the contributors may not be used to endorse or promote products derived from this software without 
-//      specific prior written permission.
-//
-//   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
-//   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
-//   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
-//   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
-//   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-//   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
-//   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-// </copyright>
-// <remarks>
-//   Container for an item (or source file) to be processed
-// </remarks>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace TemporalTwist.Model
+﻿namespace TemporalTwist.Model
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
 
     using Core;
-
-
-
+    using Interfaces;
 
     internal class JobItem : ObservableObject, IEquatable<IJobItem>, IJobItem
     {
+        private bool isBeingProcessed;
 
+        private double progress;
 
+        private string sourceFile;
+
+        private JobItemState state;
 
         public JobItem()
         {
-            State = JobItemState.None;
-            TemporaryFiles = new List<string>();
+            this.State = JobItemState.None;
+            this.TemporaryFiles = new List<string>();
         }
 
-        private string _sourceFile;
-
-        private double _progress;
-
-        private bool _isBeingProcessed;
-
-        private JobItemState _state;
-
-
-
-
-
         public string DestinationFile { get; set; }
-
-
-
-
 
         public bool IsBeingProcessed
         {
             get
             {
-                return _isBeingProcessed;
+                return this.isBeingProcessed;
             }
 
             set
             {
-                if (_isBeingProcessed == value)
+                if (this.isBeingProcessed == value)
                 {
                     return;
                 }
 
-                _isBeingProcessed = value;
-                RaisePropertyChanged("IsBeingProcessed");
+                this.isBeingProcessed = value;
+                this.RaisePropertyChanged(nameof(this.IsBeingProcessed));
             }
         }
 
-
-
-
-
-        public string LastFile
-        {
-            get
-            {
-                return TemporaryFiles[TemporaryFiles.Count - 1];
-            }
-        }
-
-
-
-
+        public string LastFile => this.TemporaryFiles[this.TemporaryFiles.Count - 1];
 
         public double Progress
         {
             get
             {
-                return _progress;
+                return this.progress;
             }
 
             set
             {
-                if (_progress == value)
+                if (Math.Abs(this.progress - value) < 0.001)
                 {
                     return;
                 }
 
-                _progress = value;
-                RaisePropertyChanged("Progress");
+                this.progress = value;
+                this.RaisePropertyChanged(nameof(this.Progress));
             }
         }
-
-
-
-
 
         public JobItemState State
         {
             get
             {
-                return _state;
+                return this.state;
             }
 
             set
             {
-                if (_state == value)
+                if (this.state == value)
                 {
                     return;
                 }
 
-                _state = value;
-                RaisePropertyChanged("State");
+                this.state = value;
+                this.RaisePropertyChanged(nameof(this.State));
             }
         }
-
-
-
-
 
         public string SourceFile
         {
             get
             {
-                return _sourceFile;
+                return this.sourceFile;
             }
 
             set
             {
-                if (_sourceFile != value)
+                if (this.sourceFile != value)
                 {
-                    _sourceFile = value;
-                    RaisePropertyChanged("SourceFile");
+                    this.sourceFile = value;
+                    this.RaisePropertyChanged(nameof(this.SourceFile));
                 }
             }
         }
 
-
-
-
-
-        public List<string> TemporaryFiles { get; private set; }
-
-
-
-
-
-
-
+        public List<string> TemporaryFiles { get; }
 
         public bool Equals(IJobItem other)
         {
@@ -189,17 +115,21 @@ namespace TemporalTwist.Model
                 return true;
             }
 
-            return Equals(other.SourceFile, SourceFile);
+            return other.SourceFile.Equals(this.SourceFile);
         }
 
-
-
-
-
-
-
-
-
+        public void Reset()
+        {
+            this.State = JobItemState.None;
+            this.Progress = 0;
+            foreach (var file in this.TemporaryFiles)
+            {
+                if (File.Exists(file))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
 
         public override bool Equals(object obj)
         {
@@ -219,35 +149,12 @@ namespace TemporalTwist.Model
                 return false;
             }
 
-            return Equals((IJobItem)obj);
+            return this.Equals((IJobItem)obj);
         }
-
-
-
-
-
-
-
 
         public override int GetHashCode()
         {
-            return SourceFile != null ? SourceFile.GetHashCode() : 0;
-        }
-
-
-
-
-        public void Reset()
-        {
-            State = JobItemState.None;
-            Progress = 0;
-            foreach (var file in TemporaryFiles)
-            {
-                if (File.Exists(file))
-                {
-                    File.Delete(file);
-                }
-            }
+            return this.SourceFile?.GetHashCode() ?? 0;
         }
     }
 }

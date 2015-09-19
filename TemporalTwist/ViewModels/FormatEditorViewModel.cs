@@ -33,7 +33,7 @@ namespace TemporalTwist.ViewModels
     using GalaSoft.MvvmLight.Command;
 
     using TemporalTwist.Core;
-    using TemporalTwist.Model;
+    using Model;
 
     public class FormatEditorViewModel : BaseViewModel
     {

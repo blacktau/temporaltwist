@@ -7,6 +7,7 @@
     internal abstract class ObservableObject : INotifyPropertyChanged
     {
         public virtual event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
 
         protected void RaisePropertyChanged(string propertyName)

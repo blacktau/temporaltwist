@@ -26,7 +26,7 @@ namespace TemporalTwist.ViewHelpers
     using System.Collections;
     using System.Collections.Generic;
 
-    using TemporalTwist.Model;
+    using Model;
 
     internal class FormatListWrapper : IList<Format>
     {

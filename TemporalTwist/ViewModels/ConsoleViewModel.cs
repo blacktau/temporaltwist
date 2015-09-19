@@ -27,26 +27,64 @@ namespace TemporalTwist.ViewModels
     using System.Windows;
 
     using TemporalTwist.Core;
+    using Interfaces;
+    using System;
 
     public class ConsoleViewModel : BaseViewModel
     {
-        public ConsoleViewModel()
+        private IConsoleOutputBus consoleOutputProcessor;
+
+        public ConsoleViewModel(IConsoleOutputBus consoleOutputProcessor)
         {
             this.Text = new ThreadSafeObservableCollection<string>();
+            this.consoleOutputProcessor = consoleOutputProcessor;
         }
 
         public ThreadSafeObservableCollection<string> Text { get; }
 
         public bool IsVisible { get; set; }
 
-        public void HandleConsoleUpdate(string message)
-        {
-            this.Text.Add(message);
-        }
-
         public void IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             this.IsVisible = (bool)e.NewValue;
+            if (this.IsVisible)
+            {
+                BindConsoleListener();
+            }
+            else
+            {
+                UnbindConsoleListener();
+            }
+        }
+
+        private void UnbindConsoleListener()
+        {
+            if (this.consoleOutputProcessor.Listeners.Contains(this.ProcessLine))
+            {
+                this.consoleOutputProcessor.Listeners.Remove(this.ProcessLine);
+            }
+        }
+
+        private void BindConsoleListener()
+        {
+            if (this.consoleOutputProcessor.Listeners.Contains(this.ProcessLine))
+            {
+                this.consoleOutputProcessor.Listeners.Add(this.ProcessLine);
+            }
+        }
+
+        public void ProcessLine(string line)
+        {
+            this.Text.Add(line);
+        }
+
+        public override void Cleanup()
+        {
+            base.Cleanup();
+
+            this.UnbindConsoleListener();
+
+            this.consoleOutputProcessor = null;
         }
     }
 }
