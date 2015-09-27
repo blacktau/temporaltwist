@@ -1,11 +1,11 @@
 ﻿namespace TemporalTwist.Engine.Steps
 {
-    using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using Interfaces;
+
+    using TemporalTwist.Interfaces;
 
     public abstract class ExternalExecutionStep : Step
     {
@@ -23,8 +23,7 @@
         {
             if (!File.Exists(this.executablePath))
             {
-                throw new FileNotFoundException(
-                    string.Format(CultureInfo.InvariantCulture, "Could not find {0}.", this.executablePath));
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find {0}.", this.executablePath));
             }
 
             var process = this.InitialiseProcess();
@@ -52,18 +51,7 @@
 
         private Process InitialiseProcess()
         {
-            var process = new Process
-                              {
-                                  EnableRaisingEvents = false, 
-                                  StartInfo =
-                                      {
-                                          FileName = this.executablePath, 
-                                          UseShellExecute = false, 
-                                          CreateNoWindow = true, 
-                                          RedirectStandardOutput = true, 
-                                          RedirectStandardError = true
-                                      }
-                              };
+            var process = new Process { EnableRaisingEvents = false, StartInfo = { FileName = this.executablePath, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true } };
             process.OutputDataReceived += this.HandleOutputDataReceived;
             process.ErrorDataReceived += this.HandleErrorDataReceived;
             return process;

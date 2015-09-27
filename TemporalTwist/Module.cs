@@ -2,7 +2,8 @@
 {
     using Ninject.Extensions.Factory;
     using Ninject.Modules;
-    using Engine;
+
+    using TemporalTwist.Engine;
     using TemporalTwist.Engine.Steps;
     using TemporalTwist.Factories;
     using TemporalTwist.Interfaces;
@@ -14,11 +15,9 @@
     {
         public override void Load()
         {
-            BindViewModels();
-            
-            BindSteps();
-
-            BindFactories();
+            this.BindViewModels();
+            this.BindSteps();
+            this.BindFactories();
 
             this.Bind<ConfigurationService>().ToSelf().InSingletonScope();
             this.Bind<IConsoleOutputBus>().To<ConsoleOutputBus>().InSingletonScope();
@@ -44,8 +43,10 @@
         private void BindSteps()
         {
             this.Bind<ICleanupStep>().To<CleanupStep>().InSingletonScope();
-            this.Bind<IFfmpegDecodingStep>().To<FfmpegDecodingStep>().InSingletonScope();
-            this.Bind<IFfmpegEncodingStep>().To<FfmpegEncodingStep>().InSingletonScope();
+            //this.Bind<IDecodingStep>().To<FfmpegDecodingStep>().InSingletonScope();
+            this.Bind<IDecodingStep>().To<NaudioDecodingStep>().InSingletonScope();
+            //this.Bind<IEncodingStep>().To<FfmpegEncodingStep>().InSingletonScope();
+            this.Bind<IEncodingStep>().To<NaudioEncodingStep>().InSingletonScope();
             this.Bind<IFileCopyStep>().To<FileCopyStep>().InSingletonScope();
             this.Bind<IInitialisationStep>().To<InitialisationStep>().InSingletonScope();
             this.Bind<ITagCopyingStep>().To<TagCopyingStep>().InSingletonScope();

@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.IO;
 
-    using Core;
+    using GalaSoft.MvvmLight;
+
     using Interfaces;
 
     internal class JobItem : ObservableObject, IEquatable<IJobItem>, IJobItem
@@ -40,7 +41,7 @@
                 }
 
                 this.isBeingProcessed = value;
-                this.RaisePropertyChanged(nameof(this.IsBeingProcessed));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -61,7 +62,7 @@
                 }
 
                 this.progress = value;
-                this.RaisePropertyChanged(nameof(this.Progress));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -80,7 +81,7 @@
                 }
 
                 this.state = value;
-                this.RaisePropertyChanged(nameof(this.State));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -96,7 +97,7 @@
                 if (this.sourceFile != value)
                 {
                     this.sourceFile = value;
-                    this.RaisePropertyChanged(nameof(this.SourceFile));
+                    this.RaisePropertyChanged();
                 }
             }
         }

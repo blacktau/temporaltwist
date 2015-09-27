@@ -2,9 +2,8 @@
 {
     using System;
 
-    using Model;
-    using Interfaces;
-    using Interfaces.Steps;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
     public abstract class Step : IStep
     {

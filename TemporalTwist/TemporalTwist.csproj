@@ -223,6 +223,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Engine\Steps\NaudioEncodingStep.cs" />
+    <Compile Include="Factories\AudioFileWriterFactory.cs" />
+    <Compile Include="Interfaces\IAudioFileReaderFactory.cs" />
     <Compile Include="Interfaces\IJobProcessor.cs" />
     <Compile Include="Interfaces\IJobProcessorFactory.cs" />
     <Compile Include="Interfaces\IStepStateMapper.cs" />
@@ -230,13 +233,12 @@
     <Compile Include="Interfaces\Steps\ICleanupStep.cs" />
     <Compile Include="Interfaces\Steps\IFileCopyStep.cs" />
     <Compile Include="Interfaces\Steps\IInitialisationStep.cs" />
-    <Compile Include="Interfaces\Steps\IFfmpegEncodingStep.cs" />
-    <Compile Include="Interfaces\Steps\IFfmpegDecodingStep.cs" />
+    <Compile Include="Interfaces\Steps\IEncodingStep.cs" />
+    <Compile Include="Interfaces\Steps\IDecodingStep.cs" />
     <Compile Include="Interfaces\Steps\ITagCopyingStep.cs" />
     <Compile Include="Interfaces\Steps\IStep.cs" />
     <Compile Include="Engine\Steps\NaudioDecodingStep.cs" />
-    <Compile Include="Engine\WaveThingyFactory.cs" />
-    <Compile Include="Factories\FileReaderFactory.cs" />
+    <Compile Include="Factories\AudioAudioFileReaderFactory.cs" />
     <Compile Include="Factories\JobFactory.cs" />
     <Compile Include="Factories\StepStateMapper.cs" />
     <Compile Include="Interfaces\IConfigurationViewModelFactory.cs" />
@@ -244,7 +246,6 @@
     <Compile Include="Interfaces\IJobViewModelFactory.cs" />
     <Compile Include="Interfaces\Steps\ITempoAdjustmentStep.cs" />
     <Compile Include="Messaging\Notifications.cs" />
-    <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\ConsoleOutputBus.cs" />

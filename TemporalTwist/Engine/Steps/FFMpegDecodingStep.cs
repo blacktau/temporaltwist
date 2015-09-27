@@ -4,11 +4,10 @@
     using System.Globalization;
     using System.IO;
 
-    using Model;
-    using Interfaces.Steps;
-    using Interfaces;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
-    public class FfmpegDecodingStep : ExternalExecutionStep, IFfmpegDecodingStep
+    public class FfmpegDecodingStep : ExternalExecutionStep, IDecodingStep
     {
         public FfmpegDecodingStep(IConsoleOutputBus consoleOutputHandler)
             : base("ffmpeg.exe", consoleOutputHandler)

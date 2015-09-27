@@ -36,7 +36,7 @@
                 }
 
                 this.jobItem.SourceFile = value;
-                this.RaisePropertyChanged(nameof(this.SourceFile));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -55,7 +55,7 @@
                 }
 
                 this.jobItem.DestinationFile = value;
-                this.RaisePropertyChanged(nameof(this.SourceFile));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -78,7 +78,7 @@
                 }
 
                 this.jobItem.Progress = value;
-                this.RaisePropertyChanged(nameof(this.Progress));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -97,7 +97,7 @@
                 }
 
                 this.jobItem.State = value;
-                this.RaisePropertyChanged(nameof(this.State));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -116,7 +116,7 @@
                 }
 
                 this.jobItem.IsBeingProcessed = value;
-                this.RaisePropertyChanged(nameof(this.IsBeingProcessed));
+                this.RaisePropertyChanged();
             }
         }
 

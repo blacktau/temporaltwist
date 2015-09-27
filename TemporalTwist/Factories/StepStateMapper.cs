@@ -3,14 +3,14 @@
     using System;
     using System.Collections.Generic;
 
-    using Interfaces;
-
-    using Model;
-    using Interfaces.Steps;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
+    using TemporalTwist.Model;
 
     public class StepStateMapper : IStepStateMapper
     {
         private readonly IStepFactory stepFactory;
+
         private readonly IDictionary<JobItemState, Func<IStep>> stepMap;
 
         public StepStateMapper(IStepFactory stepFactory)

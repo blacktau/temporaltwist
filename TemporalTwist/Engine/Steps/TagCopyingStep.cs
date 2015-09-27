@@ -4,8 +4,8 @@
 
     using TagLib;
 
-    using Interfaces;
-    using Interfaces.Steps;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
     public class TagCopyingStep : Step, ITagCopyingStep
     {
@@ -43,8 +43,8 @@
             {
                 pictures[i] = new Picture(source.Pictures[i].Data)
                                   {
-                                      MimeType = source.Pictures[i].MimeType, 
-                                      Description = source.Pictures[i].Description, 
+                                      MimeType = source.Pictures[i].MimeType,
+                                      Description = source.Pictures[i].Description,
                                       Type = source.Pictures[i].Type
                                   };
             }

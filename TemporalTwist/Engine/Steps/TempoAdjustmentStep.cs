@@ -4,9 +4,8 @@
     using System.Globalization;
     using System.IO;
 
-    using Model;
-    using Interfaces.Steps;
-    using Interfaces;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
     public class TempoAdjustmentStep : ExternalExecutionStep, ITempoAdjustmentStep
     {
@@ -19,13 +18,7 @@
         {
             var tempo = (int)((job.Tempo * 100) - 100);
             var tempfile = Path.Combine(Path.GetTempPath(), DateTime.Now.Ticks + ".wav");
-            this.Execute(
-                string.Format(
-                    CultureInfo.InvariantCulture, 
-                    "\"{0}\" \"{1}\" -tempo={2}", 
-                    item.LastFile, 
-                    tempfile, 
-                    tempo));
+            this.Execute(string.Format(CultureInfo.InvariantCulture, "\"{0}\" \"{1}\" -tempo={2}", item.LastFile, tempfile, tempo));
             item.TemporaryFiles.Add(tempfile);
         }
     }

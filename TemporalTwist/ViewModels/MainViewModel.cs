@@ -10,28 +10,24 @@ namespace TemporalTwist.ViewModels
 
     using Microsoft.Win32;
 
-    using TemporalTwist.Engine;
-    using TemporalTwist.Interfaces;
+    using Interfaces;
     using Model;
-    using TemporalTwist.Services;
-    using TemporalTwist.Views;
+    using Services;
+    using Views;
 
     public class MainViewModel : ViewModelBase
     {
         #region Constants and Fields
         
         private readonly ConsoleViewModel consoleViewModel;
+        private readonly ConfigurationService configurationService;
+        private readonly IConfigurationViewModelFactory configurationViewModelFactory;
+        private readonly IJobViewModelFactory jobViewModelFactory;
+        private readonly IJobProcessorFactory jobProcessorFactory;
 
         private JobViewModel job;
-
         private IJobProcessor processor;
 
-        private readonly ConfigurationService configurationService;
-
-        private readonly IConfigurationViewModelFactory configurationViewModelFactory;
-
-        private readonly IJobViewModelFactory jobViewModelFactory;
-        private IJobProcessorFactory jobProcessorFactory;
 
         #endregion
 
@@ -226,17 +222,17 @@ namespace TemporalTwist.ViewModels
                 this.job.Reset();
             }
 
-            var start = DateTime.Now;
+            
             this.job.IsIdle = false;
 
-            this.processor = this.jobProcessorFactory.CreateJobProcessor(HandleProcessingFinished);
+            this.processor = this.jobProcessorFactory.CreateJobProcessor(this.HandleProcessingFinished);
 
             this.processor.RunAsync(this.job);
         }
 
-        private void HandleProcessingFinished(IJob job)
-        {
-            MessageBox.Show("Completed: " + (DateTime.Now - job.StartTime));
+        private void HandleProcessingFinished(IJob completedJob)
+        {   
+            MessageBox.Show("Completed: " + (DateTime.Now - completedJob.StartTime));
             this.job.IsIdle = true;
         }
 

@@ -7,9 +7,9 @@
     {
         IInitialisationStep CreateInitialisationStep();
 
-        IFfmpegDecodingStep CreateFfmpegDecodingStep();
+        IDecodingStep CreateFfmpegDecodingStep();
 
-        IFfmpegEncodingStep CreateFfmpegEncodingStep();
+        IEncodingStep CreateFfmpegEncodingStep();
 
         ITempoAdjustmentStep CreateTempoAdjustmentStep();
 

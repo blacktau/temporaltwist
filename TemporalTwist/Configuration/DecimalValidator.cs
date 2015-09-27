@@ -36,13 +36,8 @@
             var decimalValue = (decimal)value;
             if (decimalValue <= this.minValue || decimalValue >= this.maxValue)
             {
-                throw new ArgumentOutOfRangeException(
-                    nameof(value), 
-                    string.Format(
-                        CultureInfo.CurrentCulture, 
-                        "value must be in the range {0} to {1}", 
-                        this.minValue, 
-                        this.maxValue));
+                var message = string.Format(CultureInfo.CurrentCulture, "value must be in the range {0} to {1}", this.minValue, this.maxValue);
+                throw new ArgumentOutOfRangeException(nameof(value),  message);
             }
         }
     }

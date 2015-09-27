@@ -4,11 +4,10 @@
     using System.Globalization;
     using System.IO;
 
-    using Model;
-    using Interfaces.Steps;
-    using Interfaces;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
-    public class FfmpegEncodingStep : ExternalExecutionStep, IFfmpegEncodingStep
+    public class FfmpegEncodingStep : ExternalExecutionStep, IEncodingStep
     {
         public FfmpegEncodingStep(IConsoleOutputBus consoleOutputHandler)
             : base("ffmpeg.exe", consoleOutputHandler)
@@ -21,13 +20,7 @@
             var sampleRate = job.Format.SampleRate;
             var tempdir = Path.GetTempPath();
             var tempfile = Path.Combine(tempdir, DateTime.Now.Ticks + "." + job.Format.Extension);
-            var exec = string.Format(
-                CultureInfo.InvariantCulture, 
-                "-i \"{0}\" -ab {1} -ar {2} -ac 2 \"{3}\"", 
-                item.LastFile, 
-                bitRate, 
-                sampleRate, 
-                tempfile);
+            var exec = string.Format(CultureInfo.InvariantCulture, "-i \"{0}\" -ab {1} -ar {2} -ac 2 \"{3}\"", item.LastFile, bitRate, sampleRate, tempfile);
             this.Execute(exec);
             item.TemporaryFiles.Add(tempfile);
         }

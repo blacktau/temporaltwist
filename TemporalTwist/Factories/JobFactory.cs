@@ -1,8 +1,7 @@
 ﻿namespace TemporalTwist.Factories
 {
-    using Model;
-
-    using Services;
+    using TemporalTwist.Model;
+    using TemporalTwist.Services;
 
     public class JobFactory
     {

@@ -1,6 +1,5 @@
 ﻿namespace TemporalTwist.ViewModels
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -8,7 +7,7 @@
 
     using GalaSoft.MvvmLight.CommandWpf;
 
-    using TemporalTwist.Core;
+    using Core;
     using Model;
 
     public class FormatEditorViewModel : BaseViewModel
@@ -42,7 +41,7 @@
                 }
 
                 this.currentFormat = value;
-                this.RaisePropertyChanged(nameof(this.SelectedItem));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -70,7 +69,7 @@
 
                 if (!uniqueNameFound)
                 {
-                    name = string.Format("{0} ({1})", baseName, counter);
+                    name = $"{baseName} ({counter})";
                     counter++;
                 }
             }

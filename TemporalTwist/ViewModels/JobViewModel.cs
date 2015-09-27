@@ -1,20 +1,17 @@
 ﻿namespace TemporalTwist.ViewModels
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Forms;
     using System.Windows.Input;
 
-    using Core;
-
     using GalaSoft.MvvmLight.CommandWpf;
 
-
-    using Model;
-
-    using TemporalTwist.Factories;
+    using Core;
+    using Factories;
     using Interfaces;
-    using System;
+    using Model;
 
     public class JobViewModel : BaseViewModel, IJob
     {
@@ -25,53 +22,15 @@
         public JobViewModel(JobFactory jobFactory)
         {
             this.job = jobFactory.CreateJob();
-            
+
             this.ChooseOutputFolderCommand = new RelayCommand(this.ChooseOutputFolder);
             this.SelectedJobItems = new ObservableCollection<IJobItem>();
         }
 
-        public bool IsStartable => this.HasPendingItems && this.IsIdle && this.Format != null && !string.IsNullOrEmpty(this.OutputFolder);
+        public bool IsStartable
+            => this.HasPendingItems && this.IsIdle && this.Format != null && !string.IsNullOrEmpty(this.OutputFolder);
 
         public bool HasPendingItems => this.JobItems.Any(i => i.State != JobItemState.Done);
-
-        public Format Format
-        {
-            get
-            {
-                return this.job.Format;
-            }
-
-            set
-            {
-                if (this.job.Format == value)
-                {
-                    return;
-                }
-
-                this.job.Format = value;
-                this.RaisePropertyChanged(nameof(this.Format));
-            }
-        }
-
-        public decimal Tempo
-        {
-            get
-            {
-                return this.job.Tempo;
-            }
-
-            set
-            {
-                if (this.job.Tempo == value)
-                {
-                    return;
-                }
-
-                this.job.Tempo = value;
-                this.RaisePropertyChanged(nameof(this.Tempo));
-                this.RaisePropertyChanged(nameof(this.TempoPercentage));
-            }
-        }
 
         public int TempoPercentage
         {
@@ -92,6 +51,84 @@
             }
         }
 
+        public bool IsIdle
+        {
+            get
+            {
+                return this.isIdle;
+            }
+
+            set
+            {
+                if (this.isIdle == value)
+                {
+                    return;
+                }
+
+                this.isIdle = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<IJobItem> SelectedJobItems { get; private set; }
+
+        public ICommand ChooseOutputFolderCommand { get; private set; }
+
+        public int ItemsProcessed
+        {
+            get
+            {
+                return this.job?.JobItems.Count(item => item.State != JobItemState.None) ?? 0;
+            }
+        }
+
+        public bool IsComplete
+        {
+            get
+            {
+                return this.JobItems.All(jobItem => jobItem.Progress >= 100);
+            }
+        }
+
+        public Format Format
+        {
+            get
+            {
+                return this.job.Format;
+            }
+
+            set
+            {
+                if (this.job.Format.Equals(value))
+                {
+                    return;
+                }
+
+                this.job.Format = value;
+                this.RaisePropertyChanged();
+            }
+        }
+
+        public decimal Tempo
+        {
+            get
+            {
+                return this.job.Tempo;
+            }
+
+            set
+            {
+                if (this.job.Tempo == value)
+                {
+                    return;
+                }
+
+                this.job.Tempo = value;
+                this.RaisePropertyChanged();
+                this.RaisePropertyChanged(nameof(this.TempoPercentage));
+            }
+        }
+
         public string OutputFolder
         {
             get
@@ -107,25 +144,7 @@
                 }
 
                 this.job.OutputFolder = value;
-                this.RaisePropertyChanged(nameof(this.OutputFolder));
-            }
-        }
-
-        public bool IsIdle
-        {
-            get
-            {
-                return this.isIdle;
-            }
-
-            set
-            {
-                if (this.isIdle == value)
-                {
-                    return;
-                }
-                this.isIdle = value;
-                this.RaisePropertyChanged(nameof(this.IsIdle));
+                this.RaisePropertyChanged();
             }
         }
 
@@ -144,27 +163,7 @@
                 }
 
                 this.job.JobItems = value;
-                this.RaisePropertyChanged(nameof(this.JobItems));
-            }
-        }
-
-        public ObservableCollection<IJobItem> SelectedJobItems { get; private set; }
-
-        public ICommand ChooseOutputFolderCommand { get; private set; }
-
-        public int ItemsProcessed
-        {
-            get
-            {
-                return this.job?.JobItems.Count(item => item.State != JobItemState.None) ?? 0;
-            }
-        }
-
-        public bool IsComplete  
-        {
-            get
-            {
-                return this.JobItems.All(jobItem => jobItem.Progress >= 100);
+                this.RaisePropertyChanged();
             }
         }
 
@@ -172,18 +171,18 @@
         {
             get
             {
-                return job.StartTime;
+                return this.job.StartTime;
             }
 
             set
             {
-                job.StartTime = value;
+                this.job.StartTime = value;
             }
         }
 
         internal void AddItems(string[] filePaths)
         {
-            foreach (string filePath in filePaths)
+            foreach (var filePath in filePaths)
             {
                 var jobItem = new JobItemViewModel { SourceFile = filePath, Progress = 0 };
                 if (!this.job.JobItems.Contains(jobItem))
@@ -203,11 +202,7 @@
 
         private void ChooseOutputFolder()
         {
-
-            var folderBrowser = new FolderBrowserDialog
-            {
-                ShowNewFolderButton = true,
-            };
+            var folderBrowser = new FolderBrowserDialog { ShowNewFolderButton = true };
 
             if (!string.IsNullOrEmpty(this.OutputFolder))
             {

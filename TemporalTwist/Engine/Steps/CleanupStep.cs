@@ -2,8 +2,8 @@
 {
     using System.IO;
 
-    using Interfaces.Steps;
-    using Interfaces;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
     public class CleanupStep : Step, ICleanupStep
     {

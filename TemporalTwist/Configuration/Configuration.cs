@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using Model;
+    using TemporalTwist.Model;
 
     public class Configuration
     {

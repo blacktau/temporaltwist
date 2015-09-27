@@ -3,8 +3,8 @@
     using System;
     using System.IO;
 
-    using Interfaces;
-    using Interfaces.Steps;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Steps;
 
     public class InitialisationStep : Step, IInitialisationStep
     {
@@ -13,8 +13,13 @@
             var sourceFile = new FileInfo(item.SourceFile);
 
             var sourceName = this.GetSourceName(sourceFile);
-                        
-            item.DestinationFile = CreateDestinationFilePath(sourceName, job);
+
+            item.DestinationFile = this.CreateDestinationFilePath(sourceName, job);
+        }
+
+        private static string GetDestinationExtension(IJob job)
+        {
+            return job.Format.CustomExtension.StartsWith(".", StringComparison.CurrentCultureIgnoreCase) ? job.Format.CustomExtension : "." + job.Format.CustomExtension;
         }
 
         private string GetSourceName(FileInfo sourceFile)
@@ -25,16 +30,9 @@
 
         private string CreateDestinationFilePath(string sourceName, IJob job)
         {
-            string extension = GetDestinationExtension(job);
+            var extension = GetDestinationExtension(job);
 
             return Path.Combine(job.OutputFolder, sourceName + extension);
-        }
-
-        private static string GetDestinationExtension(IJob job)
-        {
-            return job.Format.CustomExtension.StartsWith(".", StringComparison.CurrentCultureIgnoreCase)
-                                ? job.Format.CustomExtension
-                                : "." + job.Format.CustomExtension;
         }
     }
 }

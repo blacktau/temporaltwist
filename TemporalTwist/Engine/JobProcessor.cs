@@ -3,16 +3,18 @@
     using System;
     using System.ComponentModel;
 
-    using Model;
-
-    using Interfaces;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Model;
 
     public class JobProcessor : IJobProcessor
     {
-        private BackgroundWorker worker;
         private readonly IConsoleOutputBus consoleOutputProcessor;
+
+        private readonly Action<IJob> processingFinishedCallback;
+
         private readonly IStepStateMapper stepStateMapper;
-        private Action<IJob> processingFinishedCallback;
+
+        private BackgroundWorker worker;
 
         public JobProcessor(IStepStateMapper stepStateMapper, IConsoleOutputBus consoleOutputProcessor, Action<IJob> processingFinishedCallback)
         {
