@@ -1,13 +1,14 @@
 ﻿namespace TemporalTwist.Factories
 {
+    using TemporalTwist.Interfaces.Factories;
+    using TemporalTwist.Interfaces.Services;
     using TemporalTwist.Model;
-    using TemporalTwist.Services;
 
-    public class JobFactory
+    public class JobFactory : IJobFactory
     {
-        private readonly ConfigurationService configurationService;
+        private readonly IConfigurationService configurationService;
 
-        public JobFactory(ConfigurationService configurationService)
+        public JobFactory(IConfigurationService configurationService)
         {
             this.configurationService = configurationService;
         }
@@ -15,9 +16,7 @@
         public Job CreateJob()
         {
             var configuration = this.configurationService.GetConfiguration();
-            var job = new Job(configuration);
-
-            return job;
+            return new Job(configuration);
         }
     }
 }

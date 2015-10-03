@@ -2,14 +2,18 @@
 {
     using System.Windows;
 
+    using GalaSoft.MvvmLight.CommandWpf;
+    using GalaSoft.MvvmLight.Messaging;
+
     using TemporalTwist.Core;
     using TemporalTwist.Interfaces;
+    using TemporalTwist.Messaging;
 
-    public class ConsoleViewModel : BaseViewModel
+    public class ConsoleViewModel : ClosableViewModelBase
     {
         private IConsoleOutputBus consoleOutputProcessor;
 
-        public ConsoleViewModel(IConsoleOutputBus consoleOutputProcessor)
+        public ConsoleViewModel(IMessenger messenger, IConsoleOutputBus consoleOutputProcessor) : base(messenger)
         {
             this.Text = new ThreadSafeObservableCollection<string>();
             this.consoleOutputProcessor = consoleOutputProcessor;
@@ -60,6 +64,31 @@
             {
                 this.consoleOutputProcessor.Listeners.Add(this.ProcessLine);
             }
+        }
+
+        private void RegisterNotificationsInterest()
+        {
+            if (this.MessengerInstance == null)
+            {
+                return;
+            }
+
+            this.MessengerInstance.Register<ShutdownNotification>(this, this.HandleShutdownNotification);
+        }
+
+        private void UnregisterNotificationsInterests()
+        {
+            if (this.MessengerInstance == null)
+            {
+                return;
+            }
+
+            this.MessengerInstance.Unregister<ShutdownNotification>(this, this.HandleShutdownNotification);
+        }
+
+        private void HandleShutdownNotification(ShutdownNotification shutdownNotification)
+        {
+            this.RequestWindowClose();
         }
     }
 }

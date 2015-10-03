@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 
     using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Factories;
     using TemporalTwist.Interfaces.Steps;
     using TemporalTwist.Model;
 

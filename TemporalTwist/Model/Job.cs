@@ -17,7 +17,7 @@
             this.JobItems = new ObservableCollection<IJobItem>();
         }
 
-        public Format Format
+        public Preset Preset
         {
             get
             {
@@ -26,7 +26,7 @@
 
             set
             {
-                this.configuration.SelectedFormat = value.Name;
+                this.configuration.SelectedPreset = value.Name;
             }
         }
 
@@ -60,9 +60,9 @@
 
         public DateTime StartTime { get; set; }
 
-        private static Format GetFormatFromConfiguration(Configuration configuration)
+        private static Preset GetFormatFromConfiguration(Configuration configuration)
         {
-            return configuration.Formats.FirstOrDefault(f => f.Name.Equals(configuration.SelectedFormat));
+            return configuration.Formats.FirstOrDefault(f => f.Name.Equals(configuration.SelectedPreset));
         }
     }
 }

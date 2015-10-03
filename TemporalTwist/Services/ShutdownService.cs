@@ -4,25 +4,31 @@
 
     using GalaSoft.MvvmLight.Messaging;
 
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Services;
     using TemporalTwist.Messaging;
 
-    public class ShutdownService
+    public class ShutdownService : IShutdownService
     {
-        public static void RequestShutdown()
+        private readonly IMessenger messenger;
+
+        public ShutdownService(IMessenger messenger)
+        {
+            this.messenger = messenger;
+        }
+
+        public void RequestShutdown()
         {
             var shouldAbortShutdown = false;
 
-            Messenger.Default.Send(
-                new NotificationMessageAction<bool>(
-                    Notifications.ConfirmShutdown, 
-                    shouldAbort => shouldAbortShutdown |= shouldAbort));
+            this.messenger.Send(new ConfirmShutdownNotification(shouldAbort => shouldAbortShutdown |= shouldAbort));
 
             if (shouldAbortShutdown)
             {
                 return;
             }
 
-            Messenger.Default.Send(new NotificationMessage(Notifications.NotifyShutdown));
+            this.messenger.Send(new NotificationMessage(Notifications.NotifyShutdown));
 
             Application.Current.Shutdown();
         }

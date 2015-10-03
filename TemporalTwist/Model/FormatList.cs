@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal class FormatList : List<Format>
+    internal class FormatList : List<Preset>
     {
         private FormatList()
         {

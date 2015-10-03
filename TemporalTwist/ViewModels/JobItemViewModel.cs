@@ -3,11 +3,12 @@
     using System;
     using System.Collections.Generic;
 
-    using TemporalTwist.Core;
+    using GalaSoft.MvvmLight;
+
     using Model;
     using Interfaces;
 
-    internal class JobItemViewModel : BaseViewModel, IJobItem
+    internal class JobItemViewModel : ViewModelBase, IJobItem
     {
         private readonly JobItem jobItem;
 

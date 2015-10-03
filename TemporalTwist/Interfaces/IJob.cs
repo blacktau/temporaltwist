@@ -6,7 +6,7 @@ namespace TemporalTwist.Interfaces
 
     public interface IJob
     {
-        Format Format { get; set; }
+        Preset Preset { get; set; }
 
         decimal Tempo { get; set; }
 

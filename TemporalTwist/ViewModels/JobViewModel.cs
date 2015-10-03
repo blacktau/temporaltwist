@@ -6,20 +6,21 @@
     using System.Windows.Forms;
     using System.Windows.Input;
 
+    using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.CommandWpf;
 
-    using Core;
-    using Factories;
-    using Interfaces;
-    using Model;
+    using TemporalTwist.Factories;
+    using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Factories;
+    using TemporalTwist.Model;
 
-    public class JobViewModel : BaseViewModel, IJob
+    public class JobViewModel : ViewModelBase, IJob
     {
         private readonly Job job;
 
         private bool isIdle = true;
 
-        public JobViewModel(JobFactory jobFactory)
+        public JobViewModel(IJobFactory jobFactory)
         {
             this.job = jobFactory.CreateJob();
 
@@ -27,8 +28,7 @@
             this.SelectedJobItems = new ObservableCollection<IJobItem>();
         }
 
-        public bool IsStartable
-            => this.HasPendingItems && this.IsIdle && this.Format != null && !string.IsNullOrEmpty(this.OutputFolder);
+        public bool IsStartable => this.HasPendingItems && this.IsIdle && this.Preset != null && !string.IsNullOrEmpty(this.OutputFolder);
 
         public bool HasPendingItems => this.JobItems.Any(i => i.State != JobItemState.Done);
 
@@ -90,21 +90,21 @@
             }
         }
 
-        public Format Format
+        public Preset Preset
         {
             get
             {
-                return this.job.Format;
+                return this.job.Preset;
             }
 
             set
             {
-                if (this.job.Format.Equals(value))
+                if (this.job.Preset == value)
                 {
                     return;
                 }
 
-                this.job.Format = value;
+                this.job.Preset = value;
                 this.RaisePropertyChanged();
             }
         }

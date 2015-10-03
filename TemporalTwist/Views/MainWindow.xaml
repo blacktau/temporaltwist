@@ -4,13 +4,13 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:viewHelpers="clr-namespace:TemporalTwist.ViewHelpers"
         xmlns:command="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+        xmlns:viewModels="clr-namespace:TemporalTwist.ViewModels"
         Title="Temporal Twist" 
         Height="479" 
         Width="532"
         Icon="..\TemporalTwist.ico"
         x:ClassModifier="internal"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        >
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <command:EventToCommand Command="{Binding CloseCommand}" 
@@ -19,7 +19,7 @@
     </i:Interaction.Triggers>
     <Window.Resources>
         <viewHelpers:FormatListWrapper x:Key="Formats"/>
-        <DataTemplate x:Key="JobTemplate" >
+        <DataTemplate x:Key="JobTemplate" DataType="viewModels:JobViewModel" >
             <DockPanel LastChildFill="True">
                 <Grid Margin="2,2,2,2" DockPanel.Dock="Bottom">
                     <Grid.ColumnDefinitions>
@@ -58,14 +58,14 @@
                         Margin="2,2,2,2" 
                         Command="{Binding Path=ChooseOutputFolderCommand}" 
                         IsEnabled="{Binding Path=IsIdle}">Browse</Button>
-                    <Label Grid.Row="2" >Format:</Label>
+                    <Label Grid.Row="2" Grid.Column="0">Preset:</Label>
                     <ComboBox 
                     Grid.Row="2" 
                     Grid.Column="1" 
                     Margin="0,2,0,2" 
                     ItemsSource="{Binding Source={StaticResource Formats}}" 
                     DisplayMemberPath="Name" 
-                    SelectedItem="{Binding Path=Format}" 
+                    SelectedItem="{Binding Path=Preset}" 
                     IsEnabled="{Binding Path=IsIdle}" />
                 </Grid>
                 <ListBox DockPanel.Dock="Top"
@@ -79,17 +79,9 @@
                          Width="Auto"
                          Height="Auto"
                          IsHitTestVisible="{Binding Path=IsIdle, Mode=OneWay}"
-                         viewHelpers:SelectedItemsBinding.Binding="{Binding Path=SelectedJobItems}"
->
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="viewHelpers:BringIntoViewWhenSelectedListBoxItemBehaviour.IsBroughtIntoViewWhenSelected"
-                                    Value="true"/>
-                            <Setter Property="IsSelected" Value="{Binding Path=IsBeingProcessed, Mode=OneWay}" />
-                        </Style>
-                    </ListBox.ItemContainerStyle>
+                         viewHelpers:SelectedItemsBinding.Binding="{Binding Path=SelectedJobItems}">
                     <ListBox.Resources>
-                        <DataTemplate x:Key="JobItemsTemplate">
+                        <DataTemplate x:Key="JobItemsTemplate" DataType="viewModels:JobItemViewModel">
                             <Border BorderBrush="{DynamicResource ButtonNormalBorder}" 
                                     BorderThickness="1" 
                                     CornerRadius="2,2,2,2" 
@@ -116,14 +108,18 @@
                             </Border>
                         </DataTemplate>
                     </ListBox.Resources>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="viewHelpers:BringIntoViewWhenSelectedListBoxItemBehaviour.IsBroughtIntoViewWhenSelected"
+                                    Value="true"/>
+                            <Setter Property="IsSelected" Value="{Binding Path=IsBeingProcessed, Mode=OneWay}" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                 </ListBox>
             </DockPanel>
         </DataTemplate>
     </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="250*"/>
@@ -145,10 +141,6 @@
                 <Button Margin="2,2,2,2" Command="{Binding Path=ShowConsoleCommand}" Width="42">
 					<Rectangle Width="32" Height="32" Fill="{DynamicResource Console}" StrokeThickness="0"/>
 				</Button>
-<!--            <Button Margin="2,2,2,2" Command="" Width="42">
-                    <Rectangle Width="32" Height="32" Fill="{DynamicResource Help}" StrokeThickness="0"/>
-                </Button>
-                -->
             </ToolBarPanel>
         </ToolBar>
         <ContentControl Content="{Binding Path=Job}"

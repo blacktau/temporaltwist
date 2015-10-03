@@ -5,16 +5,16 @@
     using System.Linq;
     using System.Windows.Input;
 
+    using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.CommandWpf;
 
-    using Core;
-    using Model;
+    using TemporalTwist.Model;
 
-    public class FormatEditorViewModel : BaseViewModel
+    public class FormatEditorViewModel : ViewModelBase
     {
-        private IList<Format> originalFormats;
+        private PresetViewModel currentPreset;
 
-        private FormatViewModel currentFormat;
+        private IList<Preset> originalFormats;
 
         public FormatEditorViewModel()
         {
@@ -25,43 +25,42 @@
             this.CancelCommand = new RelayCommand(this.CancelEdit, () => this.IsCurrentFormatEdited);
         }
 
-
-        public FormatViewModel SelectedItem
+        public PresetViewModel SelectedItem
         {
             get
             {
-                return this.currentFormat;
+                return this.currentPreset;
             }
 
             set
             {
-                if (this.currentFormat == value)
+                if (this.currentPreset == value)
                 {
                     return;
                 }
 
-                this.currentFormat = value;
+                this.currentPreset = value;
                 this.RaisePropertyChanged();
             }
         }
 
         public bool IsCurrentFormatEdited => this.SelectedItem != null && this.SelectedItem.IsEdited();
 
-        public ObservableCollection<FormatViewModel> Formats { get; set; }
+        public ObservableCollection<PresetViewModel> Formats { get; set; }
 
         public ICommand NewCommand { get; private set; }
 
         public ICommand SaveCommand { get; private set; }
 
         public ICommand CancelCommand { get; private set; }
-        
-        private static string GenerateUniqueFormatName(IEnumerable<FormatViewModel> formats, string baseName)
+
+        private static string GenerateUniqueFormatName(IEnumerable<PresetViewModel> formats, string baseName)
         {
             var name = baseName;
             var uniqueNameFound = false;
             var counter = 1;
 
-            var formatViewModels = formats as IList<FormatViewModel> ?? formats.ToList();
+            var formatViewModels = formats as IList<PresetViewModel> ?? formats.ToList();
 
             while (!uniqueNameFound)
             {
@@ -76,21 +75,21 @@
 
             return name;
         }
-        
+
         private void InitialiseFormats()
         {
             this.originalFormats = FormatList.Instance;
-            var formatViews = FormatList.Instance.Select(format => new FormatViewModel(format)).ToList();
+            var formatViews = FormatList.Instance.Select(format => new PresetViewModel(format)).ToList();
 
-            this.Formats = new ObservableCollection<FormatViewModel>(formatViews);
+            this.Formats = new ObservableCollection<PresetViewModel>(formatViews);
         }
 
         private void AddNewFormat()
         {
-            var formatName = GenerateUniqueFormatName(this.Formats, "New Format");
-            var format = new Format(formatName);
+            var formatName = GenerateUniqueFormatName(this.Formats, "New Preset");
+            var format = new Preset(formatName);
             this.originalFormats.Add(format);
-            var viewModel = new FormatViewModel(format, true);
+            var viewModel = new PresetViewModel(format, true);
             this.Formats.Add(viewModel);
         }
 

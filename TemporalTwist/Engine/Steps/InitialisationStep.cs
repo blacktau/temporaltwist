@@ -19,7 +19,7 @@
 
         private static string GetDestinationExtension(IJob job)
         {
-            return job.Format.CustomExtension.StartsWith(".", StringComparison.CurrentCultureIgnoreCase) ? job.Format.CustomExtension : "." + job.Format.CustomExtension;
+            return job.Preset.CustomExtension.StartsWith(".", StringComparison.CurrentCultureIgnoreCase) ? job.Preset.CustomExtension : "." + job.Preset.CustomExtension;
         }
 
         private string GetSourceName(FileInfo sourceFile)

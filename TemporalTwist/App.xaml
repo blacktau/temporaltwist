@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:ClassModifier="internal" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ViewModels="clr-namespace:TemporalTwist.ViewModels"
+             xmlns:viewModels="clr-namespace:TemporalTwist.ViewModels"
              mc:Ignorable="d"
              StartupUri="Views/MainWindow.xaml">
   <Application.Resources>
@@ -16,7 +16,7 @@
         <ResourceDictionary Source="Images/Help.xaml" />
         <ResourceDictionary Source="Images/Batch.xaml" />
       </ResourceDictionary.MergedDictionaries>
-      <ViewModels:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+      <viewModels:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
     </ResourceDictionary>
   </Application.Resources>
 </Application>

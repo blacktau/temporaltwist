@@ -7,45 +7,52 @@ namespace TemporalTwist.ViewModels
 
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.CommandWpf;
+    using GalaSoft.MvvmLight.Messaging;
 
     using Microsoft.Win32;
 
     using Interfaces;
     using Model;
-    using Services;
+
+    using TemporalTwist.Interfaces.Factories;
+    using TemporalTwist.Interfaces.Services;
+    using TemporalTwist.Messaging;
+
     using Views;
+
+    using Window = TemporalTwist.Views.Window;
 
     public class MainViewModel : ViewModelBase
     {
         #region Constants and Fields
         
-        private readonly ConsoleViewModel consoleViewModel;
-        private readonly ConfigurationService configurationService;
+        private readonly IConfigurationService configurationService;
         private readonly IConfigurationViewModelFactory configurationViewModelFactory;
         private readonly IJobViewModelFactory jobViewModelFactory;
         private readonly IJobProcessorFactory jobProcessorFactory;
 
+        private readonly IShutdownService shutdownService;
+
         private JobViewModel job;
         private IJobProcessor processor;
-
 
         #endregion
 
         #region Constructors and Destructors
 
         public MainViewModel(
-            ConsoleViewModel consoleViewModel, 
-            ConfigurationService configurationService, 
+            IMessenger messenger,
+            IConfigurationService configurationService, 
             IConfigurationViewModelFactory configurationViewModelFactory, 
             IJobViewModelFactory jobViewModelFactory, 
-            IJobProcessorFactory jobProcessorFactory)
+            IJobProcessorFactory jobProcessorFactory, 
+            IShutdownService shutdownService) : base(messenger)
         {
             this.configurationService = configurationService;
             this.configurationViewModelFactory = configurationViewModelFactory;
             this.jobViewModelFactory = jobViewModelFactory;
             this.jobProcessorFactory = jobProcessorFactory;
-
-            this.consoleViewModel = consoleViewModel;
+            this.shutdownService = shutdownService;
 
             this.LoadConfiguration();
 
@@ -54,19 +61,13 @@ namespace TemporalTwist.ViewModels
             Application.Current.Exit += (sender, args) => this.SaveConfiguration();
         }
 
-        #region Properties
-
-        private bool IsStartable => this.Job.IsStartable;
-
-        protected bool CanShowConsole => !this.consoleViewModel.IsVisible;
-
         #endregion
 
         #region Public Properties
 
-        public ICommand CloseCommand { get; private set; }
-
         public ICommand AddFilesCommand { get; private set; }
+
+        public ICommand CloseCommand { get; private set; }
 
         public ICommand ConfigureCommand { get; private set; }
 
@@ -103,7 +104,11 @@ namespace TemporalTwist.ViewModels
 
         #endregion
 
-        
+        #region Properties
+
+        private bool IsStartable => this.Job.IsStartable;
+
+        #endregion
 
         #region Public Methods
 
@@ -113,6 +118,8 @@ namespace TemporalTwist.ViewModels
         }
 
         #endregion
+
+        #region Methods
 
         private void LoadConfiguration()
         {
@@ -139,21 +146,20 @@ namespace TemporalTwist.ViewModels
             this.ResetCommand = new RelayCommand(this.ResetJob, () => this.job.IsIdle && this.job.ItemsProcessed > 0);
 
             this.ConfigureCommand = new RelayCommand(this.ShowConfiguration, () => this.job.IsIdle);
-            this.ShowConsoleCommand = new RelayCommand(this.ShowConsole, () => this.CanShowConsole);
-            this.CloseCommand = new RelayCommand(() => { this.SaveConfiguration(); this.consoleViewModel?.CloseCommand.Execute(null); });
+            this.ShowConsoleCommand = new RelayCommand(this.ShowConsole);
+            this.CloseCommand = new RelayCommand(this.OnClose);
             this.DropCommand = new RelayCommand<object>(this.AddDroppedFiles, p => this.job.IsIdle);
         }
 
-        #endregion
-
-        #region Methods
+        private void OnClose()
+        {
+            this.SaveConfiguration();
+            this.shutdownService.RequestShutdown();
+        }
 
         private void ShowConfiguration()
         {
-            var viewModel = this.configurationViewModelFactory.CreateConfigurationViewModel();
-            var formatView = new ConfigurationEditorWindow { DataContext = viewModel };
-            viewModel.WindowCloseRequester = formatView.Close;
-            formatView.ShowDialog();
+            this.MessengerInstance.Send(new OpenWindowRequest(Window.ConfigurationEditor));
         }
 
         private void AddDroppedFiles(object data)
@@ -204,10 +210,7 @@ namespace TemporalTwist.ViewModels
 
         private void ShowConsole()
         {
-            var console = new ConsoleWindow { DataContext = this.consoleViewModel };
-            console.IsVisibleChanged += this.consoleViewModel.IsVisibleChanged;
-            this.consoleViewModel.WindowCloseRequester = console.Close;
-            console.Show();
+            this.MessengerInstance.Send(new OpenWindowRequest(Window.Console));
         }
 
         private void StartProcessing()

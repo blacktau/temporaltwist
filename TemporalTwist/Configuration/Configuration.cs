@@ -4,15 +4,15 @@
 
     using TemporalTwist.Model;
 
-    public class Configuration
+    public class Configuration : IConfiguration
     {
-        public List<Format> Formats { get; set; }
+        public List<Preset> Formats { get; set; }
 
         public bool CheckForUpdatesAtStart { get; set; }
 
         public string OutputFolder { get; set; }
 
-        public string SelectedFormat { get; set; }
+        public string SelectedPreset { get; set; }
 
         public decimal Tempo { get; set; }
     }

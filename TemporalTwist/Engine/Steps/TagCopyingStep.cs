@@ -20,7 +20,7 @@
                 var sourceTag = sourceTagFile.GetTag(type, false);
                 if (sourceTag != null)
                 {
-                    foreach (var tagType in job.Format.TagTypes)
+                    foreach (var tagType in job.Preset.TagTypes)
                     {
                         var targetTag = targetTagFile.GetTag(tagType, true);
                         if (targetTag != null)

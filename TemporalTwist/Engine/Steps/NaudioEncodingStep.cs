@@ -18,12 +18,12 @@
 
         public override void ProcessItem(IJob job, IJobItem item)
         {
-            var bitRate = job.Format.BitRate;
-            var sampleRate = job.Format.SampleRate;
+            var bitRate = job.Preset.BitRate;
+            var sampleRate = job.Preset.SampleRate;
             var tempdir = Path.GetTempPath();
-            var tempfile = Path.Combine(tempdir, DateTime.Now.Ticks + "." + job.Format.Extension);
+            var tempfile = Path.Combine(tempdir, DateTime.Now.Ticks + "." + job.Preset.Extension);
 
-            var subType = this.GetAudioSubtypeForExtension(job.Format.Extension);
+            var subType = this.GetAudioSubtypeForExtension(job.Preset.Extension);
             var waveFormat = new WaveFormat(sampleRate, 2);
 
             var mediaType = MediaFoundationEncoder.SelectMediaType(subType, waveFormat, bitRate);
@@ -53,6 +53,9 @@
             {
                 case "mp3":
                     return AudioSubtypes.MFAudioFormat_MP3;
+
+                case "m4a":
+                    return AudioSubtypes.MFAudioFormat_AAC;
 
                 default:
                     return AudioSubtypes.MFAudioFormat_PCM;

@@ -7,6 +7,7 @@
     using NAudio.WindowsMediaFormat;
 
     using TemporalTwist.Interfaces;
+    using TemporalTwist.Interfaces.Factories;
 
     public class AudioAudioFileReaderFactory : IAudioFileReaderFactory
     {

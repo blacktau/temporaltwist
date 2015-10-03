@@ -160,6 +160,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Configuration\IConfiguration.cs" />
+    <Compile Include="Factories\JobFactory.cs" />
+    <Compile Include="Interfaces\Factories\IJobFactory.cs" />
+    <Compile Include="Interfaces\Factories\IViewFactory.cs" />
+    <Compile Include="Interfaces\Services\IWindowService.cs" />
+    <Compile Include="Interfaces\Views\IConsoleWindow.cs" />
+    <Compile Include="Messaging\WindowClosedNotification.cs" />
+    <Compile Include="Interfaces\Views\IConfigurationEditorWindow.cs" />
+    <Compile Include="Views\Window.cs" />
     <Page Include="Images\AddFiles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -225,9 +234,9 @@
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Engine\Steps\NaudioEncodingStep.cs" />
     <Compile Include="Factories\AudioFileWriterFactory.cs" />
-    <Compile Include="Interfaces\IAudioFileReaderFactory.cs" />
+    <Compile Include="Interfaces\Factories\IAudioFileReaderFactory.cs" />
     <Compile Include="Interfaces\IJobProcessor.cs" />
-    <Compile Include="Interfaces\IJobProcessorFactory.cs" />
+    <Compile Include="Interfaces\Factories\IJobProcessorFactory.cs" />
     <Compile Include="Interfaces\IStepStateMapper.cs" />
     <Compile Include="Interfaces\IConsoleOutputBus.cs" />
     <Compile Include="Interfaces\Steps\ICleanupStep.cs" />
@@ -239,17 +248,23 @@
     <Compile Include="Interfaces\Steps\IStep.cs" />
     <Compile Include="Engine\Steps\NaudioDecodingStep.cs" />
     <Compile Include="Factories\AudioAudioFileReaderFactory.cs" />
-    <Compile Include="Factories\JobFactory.cs" />
     <Compile Include="Factories\StepStateMapper.cs" />
-    <Compile Include="Interfaces\IConfigurationViewModelFactory.cs" />
-    <Compile Include="Interfaces\IStepFactory.cs" />
-    <Compile Include="Interfaces\IJobViewModelFactory.cs" />
+    <Compile Include="Interfaces\Factories\IConfigurationViewModelFactory.cs" />
+    <Compile Include="Interfaces\Factories\IStepFactory.cs" />
+    <Compile Include="Interfaces\Factories\IJobViewModelFactory.cs" />
     <Compile Include="Interfaces\Steps\ITempoAdjustmentStep.cs" />
     <Compile Include="Messaging\Notifications.cs" />
+    <Compile Include="Messaging\ConfirmShutdownNotification.cs" />
+    <Compile Include="Messaging\OpenWindowRequest.cs" />
+    <Compile Include="Messaging\ShutdownNotification.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\ConsoleOutputBus.cs" />
+    <Compile Include="Interfaces\Services\IShutdownService.cs" />
+    <Compile Include="Interfaces\Services\IConfigurationService.cs" />
     <Compile Include="Services\ShutdownService.cs" />
+    <Compile Include="Services\WindowService.cs" />
+    <Compile Include="ViewHelpers\CloseWindowBehaviour.cs" />
     <Compile Include="ViewModels\ViewModelLocator.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -280,8 +295,8 @@
     <Compile Include="Engine\Steps\FileCopyStep.cs" />
     <Compile Include="Engine\Steps\TagCopyingStep.cs" />
     <Compile Include="Engine\Steps\TempoAdjustmentStep.cs" />
-    <Compile Include="Model\Format.cs" />
-    <Compile Include="Interfaces\IFormat.cs" />
+    <Compile Include="Model\Preset.cs" />
+    <Compile Include="Interfaces\IPreset.cs" />
     <Compile Include="Interfaces\IJobItem.cs" />
     <Compile Include="Model\Job.cs" />
     <Compile Include="Model\JobItem.cs" />
@@ -300,12 +315,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Core\BaseViewModel.cs" />
+    <Compile Include="Core\ClosableViewModelBase.cs" />
     <Compile Include="ViewHelpers\SelectedItemsBinding.cs" />
     <Compile Include="ViewModels\ConfigurationViewModel.cs" />
     <Compile Include="ViewModels\ConsoleViewModel.cs" />
     <Compile Include="ViewModels\FormatEditorViewModel.cs" />
-    <Compile Include="ViewModels\FormatViewModel.cs" />
+    <Compile Include="ViewModels\PresetViewModel.cs" />
     <Compile Include="ViewModels\JobItemViewModel.cs" />
     <Compile Include="ViewModels\JobViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -373,6 +388,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\Converter\" />
+    <Folder Include="Interfaces\Model\" />
     <Folder Include="Themes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
